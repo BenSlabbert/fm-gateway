@@ -11,7 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Introspected
-public class LoginResponse {
+public class FeedItem {
 
-  private String token;
+  private String id;
+  private String title;
+  private String caption;
+  private String contentUri;
 }

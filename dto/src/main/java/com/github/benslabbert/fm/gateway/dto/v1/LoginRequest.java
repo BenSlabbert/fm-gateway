@@ -1,14 +1,16 @@
 package com.github.benslabbert.fm.gateway.dto.v1;
 
+import io.micronaut.core.annotation.Introspected;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Introspected
 public class LoginRequest {
 
   private String username;

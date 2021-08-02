@@ -3,7 +3,16 @@ micronaut:
     name: gateway
   server:
     port: 8080
+  executors:
+    io:
+      type: fixed
+      n-threads: 5
 
+jackson:
+  serialization-inclusion: always
+  property-naming-strategy: SNAKE_CASE
+
+# fm config
 fm:
   iam:
     server:
