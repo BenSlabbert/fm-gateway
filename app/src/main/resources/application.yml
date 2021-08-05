@@ -18,3 +18,10 @@ fm:
     server:
       host: localhost
       port: 50052
+
+minio:
+  server:
+    host: localhost
+    port: 9000
+  username: minio
+  password: minio123

@@ -26,6 +26,7 @@
     <micronaut.version>2.5.9</micronaut.version>
     <spotless.version>2.12.1</spotless.version>
     <minio.version>8.3.0</minio.version>
+    <apache-commons-io.version>2.11.0</apache-commons-io.version>
   </properties>
 
   <repositories>
@@ -44,6 +45,21 @@
       <groupId>io.minio</groupId>
       <artifactId>minio</artifactId>
       <version>${minio.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${apache-commons-io.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

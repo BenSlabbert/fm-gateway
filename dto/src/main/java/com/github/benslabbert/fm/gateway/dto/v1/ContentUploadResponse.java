@@ -14,4 +14,5 @@ import lombok.NoArgsConstructor;
 public class ContentUploadResponse {
 
   private String id;
+  private String etag;
 }

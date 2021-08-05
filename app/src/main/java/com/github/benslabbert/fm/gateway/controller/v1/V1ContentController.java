@@ -33,8 +33,8 @@ public class V1ContentController {
 
   @Get("/{id}")
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
-  public InputStream get(@PathVariable String id) {
-    return contentService.get(id);
+  public HttpResponse<InputStream> get(@PathVariable String id) {
+    return HttpResponse.ok(contentService.get(id));
   }
 
   @Post
@@ -43,17 +43,14 @@ public class V1ContentController {
   public HttpResponse<ContentUploadResponse> upload(
       @Part("image") CompletedFileUpload file, @Part("meta") String uploadRequestRaw)
       throws JsonProcessingException {
-
     try {
-      log.info("upload request {}", uploadRequestRaw);
       var uploadRequest =
           objectMapper.readValue(uploadRequestRaw, new TypeReference<ContentUploadRequest>() {});
-      log.info("upload request {}", uploadRequest);
-      log.info("file name {} filename {}", file.getName(), file.getFilename());
+
+      var resp = contentService.put(uploadRequest, file);
+      return HttpResponse.created(resp);
     } finally {
       file.discard();
     }
-
-    return HttpResponse.created(ContentUploadResponse.builder().build());
   }
 }
