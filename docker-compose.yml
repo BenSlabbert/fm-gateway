@@ -7,18 +7,18 @@ services:
       - "5432:5432"
     shm_size: 256MB
     environment:
-      POSTGRES_USER: dbuser
-      POSTGRES_PASSWORD: theSecretPassword
-      POSTGRES_DB: micronaut
-    volumes:
-      - pg_data:/var/lib/postgresql
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+#    volumes:
+#      - pg_data:/var/lib/postgresql
 
   redis:
     image: redis:6-alpine
     ports:
       - "6379:6379"
-    volumes:
-      - redis_data:/data
+#    volumes:
+#      - redis_data:/data
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -27,8 +27,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "22181:2181"
-    volumes:
-      - zookeeper_data:/var/lib/zookeeper
+#    volumes:
+#      - zookeeper_data:/var/lib/zookeeper
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -43,8 +43,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    volumes:
-      - kafka_data:/var/lib/kafka
+#    volumes:
+#      - kafka_data:/var/lib/kafka
 
   minio:
     image: minio/minio
@@ -60,8 +60,8 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
-    volumes:
-      - minio_data:/data
+#    volumes:
+#      - minio_data:/data
 
 volumes:
   minio_data:

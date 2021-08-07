@@ -1,6 +1,7 @@
-package com.github.benslabbert.fm.gateway.dto.v1;
+package com.github.benslabbert.fm.gateway.dto;
 
 import io.micronaut.core.annotation.Introspected;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Introspected
-public class ContentUploadRequest {
+public class UserDto {
 
-  private String title;
-  private String caption;
+  private UUID id;
+  private String name;
 }

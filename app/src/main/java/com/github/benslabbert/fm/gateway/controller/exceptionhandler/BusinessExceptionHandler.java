@@ -1,6 +1,6 @@
 package com.github.benslabbert.fm.gateway.controller.exceptionhandler;
 
-import com.github.benslabbert.fm.gateway.dto.BadRequest;
+import com.github.benslabbert.fm.gateway.dto.BadRequestDto;
 import com.github.benslabbert.fm.gateway.exception.BusinessException;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.HttpRequest;
@@ -15,12 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 @Singleton
 @Requires(classes = {BusinessException.class})
 public class BusinessExceptionHandler
-    implements ExceptionHandler<BusinessException, HttpResponse<BadRequest>> {
+    implements ExceptionHandler<BusinessException, HttpResponse<BadRequestDto>> {
 
   @Override
-  public HttpResponse<BadRequest> handle(HttpRequest request, BusinessException exception) {
+  public HttpResponse<BadRequestDto> handle(HttpRequest request, BusinessException exception) {
     log.error("business exception occurred", exception);
     return HttpResponse.badRequest(
-        BadRequest.builder().message("Failed to process request").build());
+        BadRequestDto.builder().message("Failed to process request").build());
   }
 }

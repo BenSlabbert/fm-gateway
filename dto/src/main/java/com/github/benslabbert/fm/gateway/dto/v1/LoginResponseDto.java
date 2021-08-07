@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Introspected
-public class ContentRequest {
+public class LoginResponseDto {
 
-  private String id;
+  private String token;
 }

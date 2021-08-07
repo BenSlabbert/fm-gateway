@@ -1,4 +1,4 @@
-package com.github.benslabbert.fm.gateway.dto.v1;
+package com.github.benslabbert.fm.gateway.dto;
 
 import io.micronaut.core.annotation.Introspected;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Introspected
-public class LoginResponse {
+public class BadRequestDto {
 
-  private String token;
+  private String message;
 }

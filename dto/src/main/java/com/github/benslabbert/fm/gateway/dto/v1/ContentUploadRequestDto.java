@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Introspected
-public class ContentUploadResponse {
+public class ContentUploadRequestDto {
 
-  private String id;
-  private String etag;
+  private String title;
+  private String caption;
 }

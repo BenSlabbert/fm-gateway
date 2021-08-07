@@ -1,7 +1,7 @@
 package com.github.benslabbert.fm.gateway.apiclient.v1;
 
-import com.github.benslabbert.fm.gateway.dto.v1.LoginRequest;
-import com.github.benslabbert.fm.gateway.dto.v1.LoginResponse;
+import com.github.benslabbert.fm.gateway.dto.v1.LoginRequestDto;
+import com.github.benslabbert.fm.gateway.dto.v1.LoginResponseDto;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.uri.UriBuilder;
@@ -15,11 +15,11 @@ public class V1Client {
     this.httpClient = HttpClient.create(url);
   }
 
-  public LoginResponse login() {
+  public LoginResponseDto login() {
     var login = UriBuilder.of("/v1").path("login").build();
     var post =
         HttpRequest.POST(
-            login, LoginRequest.builder().username("user").password("password").build());
-    return httpClient.toBlocking().retrieve(post, LoginResponse.class);
+            login, LoginRequestDto.builder().username("user").password("password").build());
+    return httpClient.toBlocking().retrieve(post, LoginResponseDto.class);
   }
 }

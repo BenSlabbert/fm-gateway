@@ -1,8 +1,11 @@
 package com.github.benslabbert.fm.gateway.service;
 
 import com.github.benslabbert.fm.gateway.config.MinioConfig;
-import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadRequest;
-import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadResponse;
+import com.github.benslabbert.fm.gateway.dao.entity.Upload;
+import com.github.benslabbert.fm.gateway.dao.entity.UploadContentType;
+import com.github.benslabbert.fm.gateway.dao.repo.UploadRepo;
+import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadRequestDto;
+import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadResponseDto;
 import com.github.benslabbert.fm.gateway.exception.InternalServiceException;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.multipart.CompletedFileUpload;
@@ -14,6 +17,8 @@ import io.minio.PutObjectArgs;
 import java.io.InputStream;
 import java.util.UUID;
 import javax.inject.Singleton;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,9 +28,12 @@ public class ContentServiceImpl implements ContentService {
 
   private static final String BUCKET = "content";
   private final MinioClient minioClient;
+  private final UploadRepo uploadRepo;
 
   @SneakyThrows
-  public ContentServiceImpl(MinioConfig minioConfig) {
+  public ContentServiceImpl(MinioConfig minioConfig, UploadRepo uploadRepo) {
+    this.uploadRepo = uploadRepo;
+
     this.minioClient =
         MinioClient.builder()
             .endpoint("http://" + minioConfig.getHost() + ":" + minioConfig.getPort())
@@ -48,7 +56,10 @@ public class ContentServiceImpl implements ContentService {
   }
 
   @Override
-  public ContentUploadResponse put(ContentUploadRequest uploadRequest, CompletedFileUpload file) {
+  @Transactional(value = TxType.REQUIRED, rollbackOn = Exception.class)
+  public ContentUploadResponseDto put(
+      UUID userId, ContentUploadRequestDto uploadRequest, CompletedFileUpload file) {
+
     try {
       var objectId = UUID.randomUUID().toString();
       var putObjectArgs =
@@ -59,7 +70,19 @@ public class ContentServiceImpl implements ContentService {
               .build();
 
       var objectWriteResponse = minioClient.putObject(putObjectArgs);
-      return ContentUploadResponse.builder().id(objectId).etag(objectWriteResponse.etag()).build();
+
+      uploadRepo.save(
+          Upload.builder()
+              .userId(userId)
+              .contentLength(file.getSize())
+              .objectKey(objectId)
+              .contentType(UploadContentType.IMAGE)
+              .build());
+
+      return ContentUploadResponseDto.builder()
+          .id(objectId)
+          .etag(objectWriteResponse.etag())
+          .build();
     } catch (Exception e) {
       throw new InternalServiceException(e);
     }

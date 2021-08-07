@@ -1,4 +1,4 @@
-package com.github.benslabbert.fm.gateway.dto;
+package com.github.benslabbert.fm.gateway.dto.v1;
 
 import io.micronaut.core.annotation.Introspected;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Introspected
-public class BadRequest {
+public class FeedItemDto {
 
-  private String message;
+  private String id;
+  private String title;
+  private String caption;
+  private String contentUri;
 }

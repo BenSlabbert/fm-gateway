@@ -8,11 +8,25 @@ micronaut:
       type: fixed
       n-threads: 5
 
+datasources:
+  default:
+    url: jdbc:postgresql://localhost:5432/db
+    driverClassName: org.postgresql.Driver
+    username: user
+    password: "password"
+    dialect: postgres
+    maximum-pool-size: 1
+    connection-test-query: "select 1"
+
+flyway:
+  datasources:
+    default:
+      enabled: true
+
 jackson:
   serialization-inclusion: always
   property-naming-strategy: SNAKE_CASE
 
-# fm config
 fm:
   iam:
     server:

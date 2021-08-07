@@ -5,4 +5,4 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Introspected
-public class FeedRequest {}
+public class LogoutResponseDto {}

@@ -1,10 +1,10 @@
 package com.github.benslabbert.fm.gateway.service;
 
-import com.github.benslabbert.fm.gateway.dto.v1.LoginRequest;
-import com.github.benslabbert.fm.gateway.dto.v1.LogoutRequest;
-import com.github.benslabbert.fm.gateway.dto.v1.LogoutResponse;
+import com.github.benslabbert.fm.gateway.dto.v1.LoginRequestDto;
+import com.github.benslabbert.fm.gateway.dto.v1.LogoutRequestDto;
+import com.github.benslabbert.fm.gateway.dto.v1.LogoutResponseDto;
 import com.github.benslabbert.fm.gateway.grpc.IamClient;
-import com.github.benslabbert.fm.iam.proto.LoginResponse;
+import com.github.benslabbert.fm.iam.proto.service.v1.LoginResponse;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,16 +17,16 @@ public class IamServiceImpl implements IamService {
   private final IamClient iamClient;
 
   @Override
-  public LoginResponse login(LoginRequest loginRequest) {
+  public LoginResponse login(LoginRequestDto loginRequestDto) {
     return iamClient.send(
-        com.github.benslabbert.fm.iam.proto.LoginRequest.newBuilder()
-            .setName(loginRequest.getUsername())
-            .setPassword(loginRequest.getPassword())
+        com.github.benslabbert.fm.iam.proto.service.v1.LoginRequest.newBuilder()
+            .setName(loginRequestDto.getUsername())
+            .setPassword(loginRequestDto.getPassword())
             .build());
   }
 
   @Override
-  public LogoutResponse logout(LogoutRequest logoutRequest) {
-    return new LogoutResponse();
+  public LogoutResponseDto logout(LogoutRequestDto logoutRequestDto) {
+    return new LogoutResponseDto();
   }
 }

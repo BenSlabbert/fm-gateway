@@ -11,10 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Introspected
-public class FeedItem {
+public class LoginRequestDto {
 
-  private String id;
-  private String title;
-  private String caption;
-  private String contentUri;
+  private String username;
+  private String password;
 }

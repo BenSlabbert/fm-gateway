@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Introspected
-public class LoginRequest {
+public class ContentRequestDto {
 
-  private String username;
-  private String password;
+  private String id;
 }

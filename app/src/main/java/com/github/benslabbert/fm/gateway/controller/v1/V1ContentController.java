@@ -3,8 +3,8 @@ package com.github.benslabbert.fm.gateway.controller.v1;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadRequest;
-import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadResponse;
+import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadRequestDto;
+import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadResponseDto;
 import com.github.benslabbert.fm.gateway.service.ContentService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -19,6 +19,7 @@ import io.micronaut.http.multipart.CompletedFileUpload;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import java.io.InputStream;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,14 +41,16 @@ public class V1ContentController {
   @Post
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.APPLICATION_JSON)
-  public HttpResponse<ContentUploadResponse> upload(
+  public HttpResponse<ContentUploadResponseDto> upload(
       @Part("image") CompletedFileUpload file, @Part("meta") String uploadRequestRaw)
       throws JsonProcessingException {
+
+    // todo we need to add security now and user auth to get the user details from the cookie etc...
     try {
       var uploadRequest =
-          objectMapper.readValue(uploadRequestRaw, new TypeReference<ContentUploadRequest>() {});
+          objectMapper.readValue(uploadRequestRaw, new TypeReference<ContentUploadRequestDto>() {});
 
-      var resp = contentService.put(uploadRequest, file);
+      var resp = contentService.put(UUID.randomUUID(), uploadRequest, file);
       return HttpResponse.created(resp);
     } finally {
       file.discard();

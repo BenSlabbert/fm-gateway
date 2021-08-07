@@ -1,7 +1,7 @@
 package com.github.benslabbert.fm.gateway.controller.v1;
 
-import com.github.benslabbert.fm.gateway.dto.v1.FeedRequest;
-import com.github.benslabbert.fm.gateway.dto.v1.FeedResponse;
+import com.github.benslabbert.fm.gateway.dto.v1.FeedRequestDto;
+import com.github.benslabbert.fm.gateway.dto.v1.FeedResponseDto;
 import com.github.benslabbert.fm.gateway.service.FeedService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -21,7 +21,7 @@ public class V1FeedController {
   private final FeedService feedService;
 
   @Get(produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
-  public HttpResponse<FeedResponse> get(@Body @Valid FeedRequest feedRequest) {
-    return HttpResponse.ok(feedService.get(feedRequest));
+  public HttpResponse<FeedResponseDto> get(@Body @Valid FeedRequestDto feedRequestDto) {
+    return HttpResponse.ok(feedService.get(feedRequestDto));
   }
 }

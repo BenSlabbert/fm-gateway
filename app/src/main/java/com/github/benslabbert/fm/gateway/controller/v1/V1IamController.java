@@ -1,9 +1,9 @@
 package com.github.benslabbert.fm.gateway.controller.v1;
 
-import com.github.benslabbert.fm.gateway.dto.v1.LoginRequest;
-import com.github.benslabbert.fm.gateway.dto.v1.LoginResponse;
-import com.github.benslabbert.fm.gateway.dto.v1.LogoutRequest;
-import com.github.benslabbert.fm.gateway.dto.v1.LogoutResponse;
+import com.github.benslabbert.fm.gateway.dto.v1.LoginRequestDto;
+import com.github.benslabbert.fm.gateway.dto.v1.LoginResponseDto;
+import com.github.benslabbert.fm.gateway.dto.v1.LogoutRequestDto;
+import com.github.benslabbert.fm.gateway.dto.v1.LogoutResponseDto;
 import com.github.benslabbert.fm.gateway.service.IamService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -23,17 +23,17 @@ public class V1IamController {
   private final IamService iamService;
 
   @Post(uri = "login", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
-  public HttpResponse<LoginResponse> login(@Body @Valid LoginRequest loginRequest) {
-    var resp = iamService.login(loginRequest);
-    return HttpResponse.created(LoginResponse.builder().token(resp.getToken()).build());
+  public HttpResponse<LoginResponseDto> login(@Body @Valid LoginRequestDto loginRequestDto) {
+    var resp = iamService.login(loginRequestDto);
+    return HttpResponse.created(LoginResponseDto.builder().token(resp.getToken()).build());
   }
 
   @Post(
       uri = "logout",
       produces = MediaType.APPLICATION_JSON,
       consumes = MediaType.APPLICATION_JSON)
-  public HttpResponse<LogoutResponse> logout(@Body @Valid LogoutRequest logoutRequest) {
-    var resp = iamService.logout(logoutRequest);
+  public HttpResponse<LogoutResponseDto> logout(@Body @Valid LogoutRequestDto logoutRequestDto) {
+    var resp = iamService.logout(logoutRequestDto);
     return HttpResponse.created(resp);
   }
 }
