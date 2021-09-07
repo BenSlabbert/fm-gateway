@@ -1,18 +1,28 @@
 package com.github.benslabbert.fm.gateway;
 
-import io.micronaut.runtime.EmbeddedApplication;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import javax.inject.Inject;
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-@MicronautTest
-class GatewayTest {
+class GatewayTest extends ApplicationTestServices {
 
-  @Inject EmbeddedApplication<?> application;
+  private static TestApplicationWrapper testApplicationWrapper;
+
+  @BeforeAll
+  static void beforeAll() {
+    testApplicationWrapper = startApplication();
+  }
+
+  @AfterAll
+  protected static void afterAll() {
+    testApplicationWrapper.getApplicationContext().stop();
+    stopContainers();
+  }
 
   @Test
   void testItWorks() {
-    Assertions.assertTrue(application.isRunning());
+    assertTrue(testApplicationWrapper.getApplicationContext().isRunning());
   }
 }

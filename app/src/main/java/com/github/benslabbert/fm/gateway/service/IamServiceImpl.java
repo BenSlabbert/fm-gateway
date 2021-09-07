@@ -5,6 +5,7 @@ import com.github.benslabbert.fm.gateway.dto.v1.LogoutRequestDto;
 import com.github.benslabbert.fm.gateway.dto.v1.LogoutResponseDto;
 import com.github.benslabbert.fm.gateway.grpc.IamClient;
 import com.github.benslabbert.fm.iam.proto.service.v1.LoginResponse;
+import com.google.protobuf.ByteString;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ public class IamServiceImpl implements IamService {
     return iamClient.send(
         com.github.benslabbert.fm.iam.proto.service.v1.LoginRequest.newBuilder()
             .setName(loginRequestDto.getUsername())
-            .setPassword(loginRequestDto.getPassword())
+            .setPassword(ByteString.copyFromUtf8(loginRequestDto.getPassword()))
             .build());
   }
 

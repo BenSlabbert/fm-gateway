@@ -1,9 +1,13 @@
 #!make
 
-.PHONY: install verify compile fmt clean updateVersion
+.PHONY: install test verify compile fmt clean updateVersion
 
 install: fmt
 	@ mvn install
+	@ docker build . -t gateway
+
+test: fmt
+	@ mvn test
 
 verify: fmt
 	@ mvn verify
