@@ -1,9 +1,17 @@
 package com.github.benslabbert.fm.gateway.grpc;
 
 import com.github.benslabbert.fm.gateway.config.IamConfig;
+import com.github.benslabbert.fm.iam.proto.service.v1.DeleteAccountRequest;
+import com.github.benslabbert.fm.iam.proto.service.v1.DeleteAccountResponse;
 import com.github.benslabbert.fm.iam.proto.service.v1.IamServiceGrpc;
+import com.github.benslabbert.fm.iam.proto.service.v1.LockAccountRequest;
+import com.github.benslabbert.fm.iam.proto.service.v1.LockAccountResponse;
 import com.github.benslabbert.fm.iam.proto.service.v1.LoginRequest;
 import com.github.benslabbert.fm.iam.proto.service.v1.LoginResponse;
+import com.github.benslabbert.fm.iam.proto.service.v1.LogoutRequest;
+import com.github.benslabbert.fm.iam.proto.service.v1.LogoutResponse;
+import com.github.benslabbert.fm.iam.proto.service.v1.RefreshRequest;
+import com.github.benslabbert.fm.iam.proto.service.v1.RefreshResponse;
 import io.grpc.ManagedChannelBuilder;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -24,5 +32,21 @@ public class IamClient {
 
   public LoginResponse send(LoginRequest request) {
     return stub.login(request);
+  }
+
+  public LogoutResponse logout(LogoutRequest request) {
+    return stub.logout(request);
+  }
+
+  public RefreshResponse refresh(RefreshRequest request) {
+    return stub.refresh(request);
+  }
+
+  public DeleteAccountResponse delete(DeleteAccountRequest request) {
+    return stub.deleteAccount(request);
+  }
+
+  public LockAccountResponse lock(LockAccountRequest request) {
+    return stub.lockAccount(request);
   }
 }

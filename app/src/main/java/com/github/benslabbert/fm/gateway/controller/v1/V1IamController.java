@@ -4,6 +4,8 @@ import com.github.benslabbert.fm.gateway.dto.v1.LoginRequestDto;
 import com.github.benslabbert.fm.gateway.dto.v1.LoginResponseDto;
 import com.github.benslabbert.fm.gateway.dto.v1.LogoutRequestDto;
 import com.github.benslabbert.fm.gateway.dto.v1.LogoutResponseDto;
+import com.github.benslabbert.fm.gateway.dto.v1.RefreshRequestDto;
+import com.github.benslabbert.fm.gateway.dto.v1.RefreshResponseDto;
 import com.github.benslabbert.fm.gateway.service.IamService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -25,7 +27,7 @@ public class V1IamController {
   @Post(uri = "login", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
   public HttpResponse<LoginResponseDto> login(@Body @Valid LoginRequestDto loginRequestDto) {
     var resp = iamService.login(loginRequestDto);
-    return HttpResponse.created(LoginResponseDto.builder().token(resp.getToken()).build());
+    return HttpResponse.created(resp);
   }
 
   @Post(
@@ -34,6 +36,16 @@ public class V1IamController {
       consumes = MediaType.APPLICATION_JSON)
   public HttpResponse<LogoutResponseDto> logout(@Body @Valid LogoutRequestDto logoutRequestDto) {
     var resp = iamService.logout(logoutRequestDto);
+    return HttpResponse.ok(resp);
+  }
+
+  @Post(
+      uri = "refresh",
+      produces = MediaType.APPLICATION_JSON,
+      consumes = MediaType.APPLICATION_JSON)
+  public HttpResponse<RefreshResponseDto> refresh(
+      @Body @Valid RefreshRequestDto refreshRequestDto) {
+    var resp = iamService.refresh(refreshRequestDto);
     return HttpResponse.created(resp);
   }
 }

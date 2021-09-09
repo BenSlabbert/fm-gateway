@@ -1,6 +1,18 @@
 version: "3"
 
 services:
+  iam:
+    image: iam:latest
+    ports:
+      - "50500:50500"
+    environment:
+      GRPC_SERVER_PORT: "50500"
+      DATASOURCES_DEFAULT_URL: "jdbc:postgresql://psql:5432/iam"
+      CACHE_REDIS_HOST: "redis"
+    depends_on:
+      - redis
+      - psql
+
   psql:
     image: postgres:13-alpine
     ports:
@@ -10,7 +22,8 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: db
-#    volumes:
+    volumes:
+      - ./additional-dbs.sh:/docker-entrypoint-initdb.d/additional-dbs.sh
 #      - pg_data:/var/lib/postgresql
 
   redis:

@@ -31,7 +31,7 @@ fm:
   iam:
     server:
       host: localhost
-      port: 50052
+      port: 50500
 
 minio:
   server:

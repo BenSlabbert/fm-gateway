@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Introspected
-public class LogoutRequestDto {
+public class DeleteRequestDto {
   private String token;
 }
