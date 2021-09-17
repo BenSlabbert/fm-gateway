@@ -24,19 +24,11 @@
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
 
-    <!--use this for the ci-->
-<!--    <dependency>-->
-<!--      <groupId>com.github.BenSlabbert.fm-iam</groupId>-->
-<!--      <artifactId>proto</artifactId>-->
-<!--      <version>master-SNAPSHOT</version>-->
-<!--    </dependency>-->
-
-    <!-- use this in dev mode -->
-        <dependency>
-          <groupId>com.github.benslabbert.fm.iam</groupId>
-          <artifactId>proto</artifactId>
-          <version>1.0.0-SNAPSHOT</version>
-        </dependency>
+    <dependency>
+      <groupId>com.github.benslabbert.fm.iam</groupId>
+      <artifactId>proto</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
 
     <dependency>
       <groupId>org.projectlombok</groupId>
