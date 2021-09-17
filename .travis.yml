@@ -6,6 +6,7 @@ addons:
       - curl
       - make
       - gzip
+      - git
 
 language: bash
 
@@ -20,7 +21,6 @@ script:
   - export APACHE_MAVEN_VERSION="$APACHE_MAVEN_MAJOR.$APACHE_MAVEN_MINOR.$APACHE_MAVEN_PATCH"
   - export APACHE_MAVEN="apache-maven-$APACHE_MAVEN_VERSION"
   - export APACHE_MAVEN_BIN="$APACHE_MAVEN-bin"
-  - echo "start script"
   - WORK_DIR=$(pwd)
   - cd /tmp
   - curl https://cdn.azul.com/zulu/bin/$ZULU_JDK.tar.gz -o $ZULU_JDK.tar.gz
@@ -33,8 +33,11 @@ script:
   - tar -xvf $APACHE_MAVEN_BIN.tar
   - export PATH="$PATH:/tmp/$APACHE_MAVEN/bin"
   - mvn --version
+  - echo "install deps"
+  - git clone https://github.com/BenSlabbert/fm-iam.git
+  - cd fm-iam
+  - make
   - cd "$WORK_DIR"
-  - echo "running"
   - make
 
 cache:
