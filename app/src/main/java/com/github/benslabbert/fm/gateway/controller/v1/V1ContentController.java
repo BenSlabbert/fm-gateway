@@ -5,12 +5,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadRequestDto;
 import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadResponseDto;
+import com.github.benslabbert.fm.gateway.exception.UnauthorisedException;
+import com.github.benslabbert.fm.gateway.grpc.IamClient;
 import com.github.benslabbert.fm.gateway.service.ContentService;
+import com.github.benslabbert.fm.iam.proto.service.v1.TokenValidRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Header;
 import io.micronaut.http.annotation.Part;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
@@ -31,10 +35,16 @@ public class V1ContentController {
 
   private final ContentService contentService;
   private final ObjectMapper objectMapper;
+  private final IamClient iamClient;
 
   @Get("/{id}")
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
-  public HttpResponse<InputStream> get(@PathVariable String id) {
+  public HttpResponse<InputStream> get(@Header("token") String token, @PathVariable String id) {
+    var tokenValid = iamClient.isTokenValid(TokenValidRequest.newBuilder().setToken(token).build());
+    if (!tokenValid.getValid()) {
+      throw new UnauthorisedException();
+    }
+
     return HttpResponse.ok(contentService.get(id));
   }
 
@@ -42,16 +52,20 @@ public class V1ContentController {
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.APPLICATION_JSON)
   public HttpResponse<ContentUploadResponseDto> upload(
-      @Part("image") CompletedFileUpload file, @Part("meta") String uploadRequestRaw)
+      @Header("token") String token,
+      @Part("image") CompletedFileUpload file,
+      @Part("meta") String uploadRequestRaw)
       throws JsonProcessingException {
 
-    // todo we need to add security now and user auth to get the user details from the cookie etc...
-    try {
-      var uploadRequest =
-          objectMapper.readValue(uploadRequestRaw, new TypeReference<ContentUploadRequestDto>() {});
+    var tokenValid = iamClient.isTokenValid(TokenValidRequest.newBuilder().setToken(token).build());
+    if (!tokenValid.getValid()) {
+      throw new UnauthorisedException();
+    }
 
-      var resp = contentService.put(UUID.randomUUID(), uploadRequest, file);
-      return HttpResponse.created(resp);
+    try {
+      var dto =
+          objectMapper.readValue(uploadRequestRaw, new TypeReference<ContentUploadRequestDto>() {});
+      return HttpResponse.created(contentService.put(UUID.randomUUID(), dto, file));
     } finally {
       file.discard();
     }

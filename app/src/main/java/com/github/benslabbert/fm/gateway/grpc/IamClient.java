@@ -12,6 +12,8 @@ import com.github.benslabbert.fm.iam.proto.service.v1.LogoutRequest;
 import com.github.benslabbert.fm.iam.proto.service.v1.LogoutResponse;
 import com.github.benslabbert.fm.iam.proto.service.v1.RefreshRequest;
 import com.github.benslabbert.fm.iam.proto.service.v1.RefreshResponse;
+import com.github.benslabbert.fm.iam.proto.service.v1.TokenValidRequest;
+import com.github.benslabbert.fm.iam.proto.service.v1.TokenValidResponse;
 import io.grpc.ManagedChannelBuilder;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +42,10 @@ public class IamClient {
 
   public RefreshResponse refresh(RefreshRequest request) {
     return stub.refresh(request);
+  }
+
+  public TokenValidResponse isTokenValid(TokenValidRequest request) {
+    return stub.tokenValid(request);
   }
 
   public DeleteAccountResponse delete(DeleteAccountRequest request) {
