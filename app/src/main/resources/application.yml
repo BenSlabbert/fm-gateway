@@ -2,7 +2,14 @@ micronaut:
   application:
     name: gateway
   server:
-    port: 8080
+    http-version: 2.0
+    netty:
+      worker:
+        threads: 5
+  ssl:
+    enabled: true
+    build-self-signed: true
+    port: 8443
   executors:
     io:
       type: fixed

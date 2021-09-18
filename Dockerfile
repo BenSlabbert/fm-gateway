@@ -47,6 +47,6 @@ ENV JAVA_OPTS="-XX:+UseZGC -Xlog:gc -Xmx200m -Xms200m"
 COPY --from=packager "$JAVA_MINIMAL" "$JAVA_MINIMAL"
 COPY "app/target/app.jar" "/app.jar"
 
-EXPOSE 8080
+EXPOSE 8443
 CMD [ "-jar", "/app.jar", "$JAVA_OPTS" ]
 ENTRYPOINT [ "java" ]

@@ -20,7 +20,6 @@ import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import java.io.InputStream;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import javax.inject.Singleton;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
@@ -119,7 +118,7 @@ public class ContentServiceImpl implements ContentService {
                             .id(upload.getObjectKey())
                             .etag(upload.getEtag())
                             .build())
-                .collect(Collectors.toList()))
+                .toList())
         .build();
   }
 }
