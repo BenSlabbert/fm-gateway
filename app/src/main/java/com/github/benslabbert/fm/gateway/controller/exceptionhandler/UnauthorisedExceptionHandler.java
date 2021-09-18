@@ -22,6 +22,6 @@ public class UnauthorisedExceptionHandler
       HttpRequest request, UnauthorisedException exception) {
     log.error("unauthorised request from user", exception);
     return HttpResponse.unauthorized()
-        .body(UnauthorisedDto.builder().message("Failed to process request").build());
+        .body(UnauthorisedDto.builder().message("unauthorised").build());
   }
 }

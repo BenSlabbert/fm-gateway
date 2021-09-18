@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadRequestDto;
 import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadResponseDto;
+import com.github.benslabbert.fm.gateway.dto.v1.UploadPageResponseDto;
 import com.github.benslabbert.fm.gateway.exception.UnauthorisedException;
 import com.github.benslabbert.fm.gateway.grpc.IamClient;
 import com.github.benslabbert.fm.gateway.service.ContentService;
@@ -19,11 +20,11 @@ import io.micronaut.http.annotation.Part;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Produces;
+import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.multipart.CompletedFileUpload;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import java.io.InputStream;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,12 +41,28 @@ public class V1ContentController {
   @Get("/{id}")
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   public HttpResponse<InputStream> get(@Header("token") String token, @PathVariable String id) {
+
     var tokenValid = iamClient.isTokenValid(TokenValidRequest.newBuilder().setToken(token).build());
     if (!tokenValid.getValid()) {
       throw new UnauthorisedException();
     }
 
-    return HttpResponse.ok(contentService.get(id));
+    return HttpResponse.ok(contentService.get(tokenValid.getUser(), id));
+  }
+
+  @Get
+  @Produces(MediaType.APPLICATION_JSON)
+  public HttpResponse<UploadPageResponseDto> uploads(
+      @Header("token") String token,
+      @QueryValue("page") Integer page,
+      @QueryValue("size") Integer size) {
+
+    var tokenValid = iamClient.isTokenValid(TokenValidRequest.newBuilder().setToken(token).build());
+    if (!tokenValid.getValid()) {
+      throw new UnauthorisedException();
+    }
+
+    return HttpResponse.ok().body(contentService.get(tokenValid.getUser(), page, size));
   }
 
   @Post
@@ -65,7 +82,7 @@ public class V1ContentController {
     try {
       var dto =
           objectMapper.readValue(uploadRequestRaw, new TypeReference<ContentUploadRequestDto>() {});
-      return HttpResponse.created(contentService.put(UUID.randomUUID(), dto, file));
+      return HttpResponse.created(contentService.put(tokenValid.getUser(), dto, file));
     } finally {
       file.discard();
     }

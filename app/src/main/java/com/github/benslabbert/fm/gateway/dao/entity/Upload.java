@@ -32,6 +32,9 @@ public class Upload implements UserAware, Identifiable<UUID>, Versioned {
   @MappedProperty("object_key")
   private String objectKey;
 
+  @MappedProperty("etag")
+  private String etag;
+
   @MappedProperty("content_length")
   private Long contentLength;
 
@@ -51,11 +54,17 @@ public class Upload implements UserAware, Identifiable<UUID>, Versioned {
   private Instant updated;
 
   @Builder
-  public Upload(UUID userId, String objectKey, long contentLength, UploadContentType contentType) {
+  public Upload(
+      UUID userId,
+      String objectKey,
+      long contentLength,
+      UploadContentType contentType,
+      String etag) {
     this.userId = userId;
     this.objectKey = objectKey;
     this.contentLength = contentLength;
     this.contentType = contentType;
+    this.etag = etag;
   }
 
   @Override

@@ -6,7 +6,11 @@ import com.github.benslabbert.fm.gateway.dao.entity.UploadContentType;
 import com.github.benslabbert.fm.gateway.dao.repo.UploadRepo;
 import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadRequestDto;
 import com.github.benslabbert.fm.gateway.dto.v1.ContentUploadResponseDto;
+import com.github.benslabbert.fm.gateway.dto.v1.UploadPageResponseDto;
 import com.github.benslabbert.fm.gateway.exception.InternalServiceException;
+import com.github.benslabbert.fm.gateway.exception.UnauthorisedException;
+import com.github.benslabbert.fm.iam.proto.message.v1.UserMessage;
+import io.micronaut.data.model.Pageable;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.multipart.CompletedFileUpload;
 import io.minio.BucketExistsArgs;
@@ -16,6 +20,7 @@ import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import java.io.InputStream;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.inject.Singleton;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
@@ -47,9 +52,17 @@ public class ContentServiceImpl implements ContentService {
   }
 
   @Override
-  public InputStream get(String id) {
+  public InputStream get(UserMessage user, String objectKey) {
+    var upload =
+        uploadRepo.findByUserIdAndObjectKey(UUID.fromString(user.getId().getValue()), objectKey);
+
+    if (upload.isEmpty()) {
+      throw new UnauthorisedException();
+    }
+
     try {
-      return minioClient.getObject(GetObjectArgs.builder().bucket(BUCKET).object(id).build());
+      return minioClient.getObject(
+          GetObjectArgs.builder().bucket(BUCKET).object(upload.get().getObjectKey()).build());
     } catch (Exception e) {
       throw new InternalServiceException(e);
     }
@@ -58,7 +71,7 @@ public class ContentServiceImpl implements ContentService {
   @Override
   @Transactional(value = TxType.REQUIRED, rollbackOn = Exception.class)
   public ContentUploadResponseDto put(
-      UUID userId, ContentUploadRequestDto uploadRequest, CompletedFileUpload file) {
+      UserMessage user, ContentUploadRequestDto uploadRequest, CompletedFileUpload file) {
 
     try {
       var objectId = UUID.randomUUID().toString();
@@ -73,10 +86,11 @@ public class ContentServiceImpl implements ContentService {
 
       uploadRepo.save(
           Upload.builder()
-              .userId(userId)
+              .userId(UUID.fromString(user.getId().getValue()))
               .contentLength(file.getSize())
               .objectKey(objectId)
               .contentType(UploadContentType.IMAGE)
+              .etag(objectWriteResponse.etag())
               .build());
 
       return ContentUploadResponseDto.builder()
@@ -86,5 +100,26 @@ public class ContentServiceImpl implements ContentService {
     } catch (Exception e) {
       throw new InternalServiceException(e);
     }
+  }
+
+  @Override
+  @Transactional(value = TxType.REQUIRED, rollbackOn = Exception.class)
+  public UploadPageResponseDto get(UserMessage user, Integer page, Integer size) {
+    var p = uploadRepo.findAll(Pageable.from(page, size));
+
+    return UploadPageResponseDto.builder()
+        .page(p.getPageNumber())
+        .size(p.getSize())
+        .total(p.getTotalPages())
+        .entries(
+            p.getContent().stream()
+                .map(
+                    upload ->
+                        ContentUploadResponseDto.builder()
+                            .id(upload.getObjectKey())
+                            .etag(upload.getEtag())
+                            .build())
+                .collect(Collectors.toList()))
+        .build();
   }
 }
