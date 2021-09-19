@@ -23,7 +23,7 @@ public class IamService {
 
   public LoginResponseDto login(LoginRequestDto loginRequestDto) {
     var resp =
-        iamClient.send(
+        iamClient.login(
             com.github.benslabbert.fm.iam.proto.service.v1.LoginRequest.newBuilder()
                 .setName(loginRequestDto.getUsername())
                 .setPassword(ByteString.copyFromUtf8(loginRequestDto.getPassword()))

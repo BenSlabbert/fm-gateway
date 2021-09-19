@@ -77,6 +77,14 @@
       <artifactId>micronaut-flyway</artifactId>
     </dependency>
 
+    <!--netty-->
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-transport-native-epoll</artifactId>
+      <scope>runtime</scope>
+      <classifier>linux-aarch_64</classifier>
+    </dependency>
+
     <!--micronaut-->
     <dependency>
       <groupId>io.micronaut</groupId>

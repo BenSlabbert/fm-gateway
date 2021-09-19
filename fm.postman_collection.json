@@ -34,12 +34,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/v1/iam/login",
-					"protocol": "http",
+					"raw": "{{host}}/v1/iam/login",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"v1",
 						"iam",
@@ -64,12 +62,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/v1/iam/logout",
-					"protocol": "http",
+					"raw": "{{host}}/v1/iam/logout",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"v1",
 						"iam",
@@ -108,16 +104,125 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/v1/iam/refresh",
-					"protocol": "http",
+					"raw": "{{host}}/v1/iam/refresh",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"v1",
 						"iam",
 						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var resp = pm.response.json();",
+							"pm.environment.set(\"latest_upload_id\", resp.id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/home/ben/Downloads/redis.conf"
+						},
+						{
+							"key": "meta",
+							"value": "{ \"title\": \"title\", \"caption\": \"caption\" }",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/v1/content",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"content"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get upload by id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/v1/content/{{latest_upload_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"content",
+						"{{latest_upload_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get uploads",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/v1/content?page=0&size=10",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"v1",
+						"content"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
 					]
 				}
 			},

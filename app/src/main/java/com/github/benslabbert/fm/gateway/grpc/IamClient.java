@@ -32,7 +32,7 @@ public class IamClient {
     this.stub = IamServiceGrpc.newBlockingStub(channel);
   }
 
-  public LoginResponse send(LoginRequest request) {
+  public LoginResponse login(LoginRequest request) {
     return stub.login(request);
   }
 
